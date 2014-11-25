@@ -56,13 +56,15 @@ public class FeatureMatcher {
     }
     
 	public static double calcFeatureDiff(Mat image1, Mat image2){
- 
+        
+        //takes 100 milsecs, too slow
         MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
         MatOfKeyPoint keypoints2 = new MatOfKeyPoint();
         FeatureDetector detector = FeatureDetector.create(FeatureDetector.SURF);
         detector.detect(image1, keypoints1);
         detector.detect(image2, keypoints2);
 
+        //takes 130 milsecs ,too slow 
         Mat descriptors1 = new Mat();
         Mat descriptors2 = new Mat();
         long time3=System.currentTimeMillis(); 
@@ -70,10 +72,12 @@ public class FeatureMatcher {
         extractor.compute( image1, keypoints1, descriptors1 );
         extractor.compute( image2, keypoints2, descriptors2 );
 
+        //takes 15 milsecs
         DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.FLANNBASED);
         MatOfDMatch matches = new MatOfDMatch();
         matcher.match(descriptors1, descriptors2, matches);
 
+        //the rest takes 2 milsecs
         List<DMatch> matchList = matches.toList();
         Iterator it = matchList.iterator(); 
         double min_dist = 100;
