@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import org.opencv.core.Core;
@@ -17,10 +18,12 @@ import org.opencv.imgproc.Imgproc;
 public class HistogramUtils {
 	public static int width = 352;
 	public static int height = 288;
-	public static final int BINS = 32;
+	public static final int BINS = 128;
 	public static final float MIN_VALUE = 0.0f;
 	public static final float MAX_VALUE = 255.0f;
-
+	public static final float  log2 = (float) Math.log(2);
+	public static HashMap<File, Float[]> entropy_table = new HashMap<File, Float[]>();
+	
     public static List<Mat> calcHists(File file) {
     	
     	Mat out = new Mat(height, width, CvType.CV_8UC3);
@@ -54,10 +57,10 @@ public class HistogramUtils {
 			e.printStackTrace();
 		}
 
-        return calcHists(out);
+        return calcHists(out, file);
     }
     
-    public static List<Mat> calcHists(Mat out) {
+    public static List<Mat> calcHists(Mat out,File file) {
     	
     	MatOfInt mChannels[] = new MatOfInt[] { new MatOfInt(0), new MatOfInt(1), new MatOfInt(2) };
     	List<Mat> norm_hist = new ArrayList<Mat>();
@@ -67,16 +70,22 @@ public class HistogramUtils {
 		Mat histR = new Mat();
 		Mat histG = new Mat();
 		Mat histB = new Mat();
+		float entropy_r,entropy_g,entropy_b;
 		
 		Imgproc.calcHist(Arrays.asList( out ), mChannels[0], 
 										new Mat(), histB, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));		
+		entropy_b = calcEntropy(histB);
 		
 		Imgproc.calcHist(Arrays.asList( out), mChannels[1], 
 				 						new Mat(), histG, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
-
+		entropy_g = calcEntropy(histG);
+		
 		Imgproc.calcHist(Arrays.asList( out), mChannels[2], 
 					new Mat(), histR, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
+		entropy_r = calcEntropy(histR);
 		
+		entropy_table.put(file,new Float[] {entropy_r,entropy_g,entropy_b});
+
 		Core.normalize(histB, histB, 0,1, Core.NORM_MINMAX, -1, new Mat());
 		histB = fixOverflow(histB);
 		norm_hist.add(histB);
@@ -105,11 +114,29 @@ public class HistogramUtils {
     public static Mat fixOverflow(Mat target){
     	
     	double data [] = {0.0f};
+
     	for(int i = 0; i < target.height();i++){
     		if(target.get(i, 0)[0] < 0 || target.get(i, 0)[0] > 1)
     			target.put(i,0,data);
 
     	}
     	return target;
+    }
+    
+    public static float calcEntropy(Mat hist){
+    	
+    	int imageSize = width*height;
+    	float entr = 0.0f;
+    	
+    	for(int i = 0; i < hist.height();i++){
+    		
+    		float frequency = (float) (hist.get(i, 0)[0] / imageSize + 0.000001);
+    		entr -= frequency * (Math.log(frequency) / log2);
+    		
+    	}
+    	return entr;
+    }
+    public static float getEntropy(File file){
+    	return entropy_table.get(file)[0]+entropy_table.get(file)[1]+entropy_table.get(file)[2];
     }
 }

@@ -21,7 +21,6 @@ import org.opencv.core.Mat;
 public class Main {
 	public static int width = 352;
 	public static int height = 288;
-	public static final int BINS = 32;
 	public static final float MIN_VALUE = 0.0f;
 	public static final float MAX_VALUE = 255.0f;
 	public static final float threshold = 0.35f;
@@ -71,8 +70,7 @@ public class Main {
         for (File file : files) {
             if (file.getName().equals(".DS_Store")) {
                 continue;
-            }
-            System.out.println("new file");
+            } 
             ImageFile target = new ImageFile(file);
             target.calcHists();
             Mat targetMat = FeatureMatcher.calcMat(file);
@@ -88,13 +86,12 @@ public class Main {
             	
             	while(iter.hasNext()){ 
             		Map.Entry<ImageFile, List<File>> entry = (Map.Entry<ImageFile, List<File>>) iter.next();
-            		
-            		System.out.println();
+            		 
             		ImageFile src= entry.getKey();
             		double diff = target.calcHistsDiff(src);
             		
+            		float entropy_diff = Math.abs(HistogramUtils.getEntropy(src.file)-HistogramUtils.getEntropy(file));
             		if(diff < threshold){ // append to this entry
-
 //            			double fDiff = FeatureMatcher.calcFeatureDiff(src.imageMat,targetMat);
 //            			if(fDiff < secondThreshold){
             				entry.getValue().add(file);
@@ -124,8 +121,10 @@ public class Main {
     	while(it.hasNext()){
     		Map.Entry<ImageFile, List<File>> entry = (Map.Entry<ImageFile, List<File>>) it.next();
     		for(File file: entry.getValue()){
-    			System.out.print(file.getName()+" ");
-    			extractImage(file);
+    			float r_val= HistogramUtils.entropy_table.get(file)[0]+HistogramUtils.entropy_table.get(file)[1]+HistogramUtils.entropy_table.get(file)[2];
+    			System.out.print(file.getName()+" "+r_val+" ");
+    			if(r_val < 16.0)
+    				extractImage(file);
     			label.repaint();
         		try {
 					Thread.sleep(100);

@@ -6,9 +6,9 @@ import org.opencv.core.Mat;
 
 
 public class ImageFile {
-	private File file;
-	List<Mat> norm_hist = new ArrayList<Mat>();
-	Mat imageMat = new Mat();
+	public File file;
+	public List<Mat> norm_hist = new ArrayList<Mat>();
+	public Mat imageMat = new Mat();
 	
 	public ImageFile(File file) {
         this.file = file;

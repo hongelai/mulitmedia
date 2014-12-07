@@ -1,4 +1,5 @@
 import java.io.File;
+
 import org.opencv.core.Core;
 
 
@@ -12,8 +13,8 @@ public class testHistogram {
 	
     public static void main(String[] args) {
 
-        String path1 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image151.rgb";
-        String path2 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image155.rgb";
+        String path1 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image015.rgb";
+        String path2 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image003.rgb";
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
         File file1 = new File(path1);
@@ -22,7 +23,8 @@ public class testHistogram {
         ImageFile if2 = new ImageFile(file2);
         if1.calcHists();
         if2.calcHists();
-        double diff = if1.calcHistsDiff(if2);
+        float diff = Math.abs(HistogramUtils.getEntropy(file1)-HistogramUtils.getEntropy(file2));
+//        double diff = if1.calcHistsDiff(if2);
         System.out.println("distance: "+ diff);
 
     }
