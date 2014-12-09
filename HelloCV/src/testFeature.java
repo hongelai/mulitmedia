@@ -8,7 +8,7 @@ public class testFeature {
 
 	public static void main(String[] args){
 		
-		String path1 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image151.rgb";
+		String path1 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image150.rgb";
         String path2 ="/Volumes/WORK/csci576/CS576_Project_Fall_2014/Dataset/image153.rgb";
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
