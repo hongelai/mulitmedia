@@ -1,4 +1,4 @@
 mulitmedia
 ==========
 
-Image classification using histogram calculation / feature matching 
+Image classification using histogram calculation / feature matching /face detector
