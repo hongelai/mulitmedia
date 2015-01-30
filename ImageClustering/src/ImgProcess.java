@@ -12,6 +12,7 @@ public class ImgProcess {
 		BufferedImage new_image_temp = new BufferedImage(new_width, height, BufferedImage.TYPE_INT_RGB);
 		BufferedImage new_image = new BufferedImage(new_width, new_height, BufferedImage.TYPE_INT_RGB);
 		int pointer = 0;
+		
 		for(int i = 0; i < width; i++)
 		{
 			int new_i = (int)((float)(i+1) * sX);

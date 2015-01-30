@@ -24,26 +24,27 @@ public class HistogramUtils {
 	public static final float  log2 = (float) Math.log(2);
 	public static HashMap<File, Float[]> entropy_table = new HashMap<File, Float[]>();
 	
-    public static List<Mat> calcHists(File file) {
-    	
+    public List<Mat> calcHists(File file) 
+    {	
     	Mat out = new Mat(height, width, CvType.CV_8UC3);
+
     	try {
+
 	    	InputStream is = new FileInputStream(file);
-	
 		    long len = file.length();
 		    byte[] bytes = new byte[(int)len];
-		    
 		    int offset = 0;
 	        int numRead = 0;
-	        
-			while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+	        byte[] data = new byte[width * height * (int)out.elemSize()];
+	    	int ind = 0;
+
+			while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length-offset)) >= 0) 
+			{
 			    offset += numRead;
 			}
-			
-			byte[] data = new byte[width * height * (int)out.elemSize()];	
-	        
-	    	int ind = 0;
-			for(int i = 0; i < width*height; i++){ 	
+
+			for(int i = 0; i < width*height; i++)
+			{ 	
 				data[i*3] = bytes[ind];
 				data[i*3 + 1] = bytes[ind+height*width];
 				data[i*3 + 2] = bytes[ind+height*width*2]; 
@@ -60,8 +61,8 @@ public class HistogramUtils {
         return calcHists(out, file);
     }
     
-    public static List<Mat> calcHists(Mat out,File file) {
-    	
+    public List<Mat> calcHists(Mat out,File file) 
+    {	
     	MatOfInt mChannels[] = new MatOfInt[] { new MatOfInt(0), new MatOfInt(1), new MatOfInt(2) };
     	List<Mat> norm_hist = new ArrayList<Mat>();
     		
@@ -81,7 +82,7 @@ public class HistogramUtils {
 		entropy_g = calcEntropy(histG);
 		
 		Imgproc.calcHist(Arrays.asList( out), mChannels[2], 
-					new Mat(), histR, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
+										new Mat(), histR, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
 		entropy_r = calcEntropy(histR);
 		
 		entropy_table.put(file,new Float[] {entropy_r,entropy_g,entropy_b});
@@ -102,8 +103,8 @@ public class HistogramUtils {
     }
 
     
-    public static double calcDiff(List<Mat> target,List<Mat> src){
-
+    public  double calcDiff(List<Mat> target,List<Mat> src)
+    {
     	double b = Imgproc.compareHist( target.get(0), src.get(0), Imgproc.CV_COMP_BHATTACHARYYA );
     	double g = Imgproc.compareHist( target.get(1), src.get(1), Imgproc.CV_COMP_BHATTACHARYYA );
     	double r = Imgproc.compareHist( target.get(2), src.get(2), Imgproc.CV_COMP_BHATTACHARYYA );
@@ -111,32 +112,37 @@ public class HistogramUtils {
     	return (r+g+b)/3;
     }
     
-    public static Mat fixOverflow(Mat target){
-    	
+    public Mat fixOverflow(Mat target)
+    {	
     	double data [] = {0.0f};
 
-    	for(int i = 0; i < target.height();i++){
+    	for(int i = 0; i < target.height(); i++)
+    	{
     		if(target.get(i, 0)[0] < 0 || target.get(i, 0)[0] > 1)
     			target.put(i,0,data);
 
     	}
+
     	return target;
     }
     
-    public static float calcEntropy(Mat hist){
-    	
-    	int imageSize = width*height;
+    public float calcEntropy(Mat hist)
+    {	
+    	int imageSize = width * height;
     	float entr = 0.0f;
     	
-    	for(int i = 0; i < hist.height();i++){
-    		
+    	for(int i = 0; i < hist.height(); i++)
+    	{
     		float frequency = (float) (hist.get(i, 0)[0] / imageSize + 0.000001);
     		entr -= frequency * (Math.log(frequency) / log2);
     		
     	}
+
     	return entr;
     }
-    public static float getEntropy(File file){
-    	return entropy_table.get(file)[0]+entropy_table.get(file)[1]+entropy_table.get(file)[2];
+
+    public float getEntropy(File file)
+    {
+    	return entropy_table.get(file)[0] + entropy_table.get(file)[1] + entropy_table.get(file)[2];
     }
 }

@@ -19,31 +19,33 @@ public class FeatureMatcher {
 	public static int height = 288;
 	public static double dist_threshold = 0.2;
 	
-    public static Mat calcMat(File file) {
+    public Mat calcMat(File file) {
     	
     	Mat out = new Mat(height, width, CvType.CV_8UC3);
+
     	try {
+
 	    	InputStream is = new FileInputStream(file);
-	
 		    long len = file.length();
 		    byte[] bytes = new byte[(int)len];
-		    
 		    int offset = 0;
 	        int numRead = 0;
-	        
-			while (offset < bytes.length && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+	        byte[] data = new byte[width * height * (int)out.elemSize()];
+            int ind = 0;
+
+			while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length-offset)) >= 0) 
+            {
 			    offset += numRead;
 			}
 			
-			byte[] data = new byte[width * height * (int)out.elemSize()];	
-	        
-	    	int ind = 0;
-			for(int i = 0; i < width*height; i++){ 	
+			for(int i = 0; i < width*height; i++)
+            { 	
 				data[i*3] = bytes[ind];
 				data[i*3 + 1] = bytes[ind+height*width];
 				data[i*3 + 2] = bytes[ind+height*width*2]; 
 				ind++;
 			}
+
 			//img.getRaster().setDataElements(0, 0, width, height, data); //convert to BufferedImage
 			is.close();
 			out.put(0, 0, data);
@@ -55,18 +57,19 @@ public class FeatureMatcher {
         return out;
     }
     
-	public static double calcFeatureDiff(Mat image1, Mat image2){
+	public double calcFeatureDiff(Mat image1, Mat image2){
  
         MatOfKeyPoint keypoints1 = new MatOfKeyPoint();
         MatOfKeyPoint keypoints2 = new MatOfKeyPoint();
         FeatureDetector detector = FeatureDetector.create(FeatureDetector.SURF);
+
         detector.detect(image1, keypoints1);
         detector.detect(image2, keypoints2);
 
         Mat descriptors1 = new Mat();
         Mat descriptors2 = new Mat();
-        long time3=System.currentTimeMillis(); 
         DescriptorExtractor extractor = DescriptorExtractor.create(DescriptorExtractor.SURF);
+
         extractor.compute( image1, keypoints1, descriptors1 );
         extractor.compute( image2, keypoints2, descriptors2 );
 
@@ -78,6 +81,7 @@ public class FeatureMatcher {
         Iterator it = matchList.iterator(); 
         double min_dist = 100;
         int totalPoints = 0;
+
         while(it.hasNext()) 
         {
               DMatch element = (DMatch) it.next(); 
@@ -86,6 +90,7 @@ public class FeatureMatcher {
               totalPoints++;
               
         }
+
         Iterator it2 = matchList.iterator(); 
         int goodMatch = 0;
         while(it2.hasNext()) 
@@ -95,6 +100,7 @@ public class FeatureMatcher {
               if( dist <= 0.2 ) goodMatch++;
               
         }
+
         double percent = (double)goodMatch/totalPoints;
 
         return 1 - percent;

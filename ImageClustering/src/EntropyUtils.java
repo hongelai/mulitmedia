@@ -47,7 +47,7 @@ public class EntropyUtils {
 		entropy_g = calcEntropy(histG);
 		
 		Imgproc.calcHist(Arrays.asList( out), mChannels[2], 
-					new Mat(), histR, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
+										new Mat(), histR, new MatOfInt(BINS), new MatOfFloat(MIN_VALUE, MAX_VALUE));
 		entropy_r = calcEntropy(histR);
 		
 		return entropy_r+entropy_g+entropy_b;
@@ -59,12 +59,13 @@ public class EntropyUtils {
     	int imageSize = width*height;
     	float entr = 0.0f;
     	
-    	for(int i = 0; i < hist.height();i++){
+    	for(int i = 0; i < hist.height(); i++){
     		
     		float frequency = (float) (hist.get(i, 0)[0] / imageSize + 0.000001);
     		entr -= frequency * (Math.log(frequency) / log2);
     		
     	}
+
     	return entr;
     }
 }

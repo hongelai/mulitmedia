@@ -10,21 +10,28 @@ public class ImageFile {
 	public List<Mat> norm_hist = new ArrayList<Mat>();
 	public Mat imageMat = new Mat();
 	
-	public ImageFile(File file) {
+	public ImageFile(File file) 
+	{
         this.file = file;
     }
 	
-	public void calcMat(){
-		imageMat = FeatureMatcher.calcMat(this.file);
+	public void calcMat()
+	{
+		FeatureMatcher fm = FeatureMatcher();
+		imageMat = fm.calcMat(this.file);
 	}
 	
-    public void calcHists() {
-        norm_hist = HistogramUtils.calcHists(file);
+    public void calcHists() 
+    {
+    	HistogramUtils hu = new HistogramUtils();
+        norm_hist = hu.calcHists(file);
     }
     
-    public double calcHistsDiff(ImageFile ifile) {
+    public double calcHistsDiff(ImageFile ifile) 
+    {
     	List<Mat> target = ifile.norm_hist;
-        double diff = HistogramUtils.calcDiff(target, norm_hist);
+    	HistogramUtils hu = new HistogramUtils();
+        double diff = hu.calcDiff(target, norm_hist);
         
         return diff;
     }

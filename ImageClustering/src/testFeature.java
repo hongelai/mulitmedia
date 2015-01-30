@@ -14,9 +14,10 @@ public class testFeature {
         
         File file1 = new File(path1);
         File file2 = new File(path2);
-		Mat image1 = FeatureMatcher.calcMat(file1);
-		Mat image2 = FeatureMatcher.calcMat(file2);
-		double diff= FeatureMatcher.calcFeatureDiff(image1,image2);
+        FeatureMatcher matcher = new FeatureMatcher();
+		Mat image1 = matcher.calcMat(file1);
+		Mat image2 = matcher.calcMat(file2);
+		double diff= matcher.calcFeatureDiff(image1,image2);
 		System.out.println(diff);
 	}
 }

@@ -23,9 +23,10 @@ public class testHistogram {
         File file2 = new File(path2);
 //        ImageFile if1 = new ImageFile(file1);
 //        ImageFile if2 = new ImageFile(file2);
+//        HistogramUtils hu = new HistogramUtils();
 //        if1.calcHists();
 //        if2.calcHists();
-//        float diff = Math.abs(HistogramUtils.getEntropy(file1)-HistogramUtils.getEntropy(file2));
+//        float diff = Math.abs(hu.getEntropy(file1)-hu.getEntropy(file2));
 //        double diff = if1.calcHistsDiff(if2);
 //        double diff = DBSCAN.getDistance(file1, file2);
 //        System.out.println("distance: "+ diff);

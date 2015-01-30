@@ -4,17 +4,6 @@ import javax.swing.*;
 
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-
-
-
-
-
-
-
-
-
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
