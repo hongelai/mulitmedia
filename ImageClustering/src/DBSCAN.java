@@ -23,12 +23,13 @@ public class DBSCAN {
     public static HashMap<String, Double> dist_table = new HashMap<String, Double>();
     HashMap<ImageFile, List<File> > table = new HashMap<ImageFile, List<File>>();
 	
-    public DBSCAN(){
+    public DBSCAN()
+    {
     	System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
     
-	public  Vector<List> applyDbscan(){
-
+	public  Vector<List> applyDbscan()
+	{
 		resultList.clear();
 		FileList.clear();
 		VisitList.clear();
@@ -40,7 +41,6 @@ public class DBSCAN {
 		while (FileList.size() > index)
 		{
 			File p = FileList.get(index);
-
 			if(!isVisited(p))
 			{
 				Visited(p);
@@ -218,8 +218,8 @@ public class DBSCAN {
 	}
 
 	//  Returns FilesList 
-	public  Vector<File> getList() {
-	
+	public  Vector<File> getList() 
+	{
 		Vector<File> newList =new Vector<File>();
 		newList.clear();
 		
